@@ -42,4 +42,3 @@ with col2:
             st.markdown(f"**{row['created_at']}** — {row['text']}")
     else:
         st.info("Nenhuma mensagem ainda.")
-``
