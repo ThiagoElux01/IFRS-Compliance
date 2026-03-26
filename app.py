@@ -31,7 +31,7 @@ with col1:
             now = datetime.now(brasil_tz)
 
             supabase.table("messages").insert({
-                "text": msg,
+                "Norma": msg,
                 "created_at": now.isoformat()
             }).execute()
 
