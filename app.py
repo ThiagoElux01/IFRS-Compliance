@@ -22,7 +22,7 @@ with col1:
     st.write("Insira uma mensagem abaixo:")
 
     # CAMPO TEXTO 1
-    msg = st.text_input("Mensagem:")
+    msg = st.Norma_input("Mensagem:")
 
     # BOTÃO PARA INSERIR TEXTO 1
     if st.button("Enviar"):
@@ -42,10 +42,10 @@ with col1:
     st.subheader("Adicionar Texto 2")
 
     # CARREGAR LISTA DE MENSAGENS PARA O SELECTBOX
-    existing = supabase.table("messages").select("id, text").order("created_at", desc=True).execute()
+    existing = supabase.table("messages").select("id, Norma").order("created_at", desc=True).execute()
 
-    lista_opcoes = [f"{row['id']} - {row['text']}" for row in existing.data]
-    lista_ids = {f"{row['id']} - {row['text']}": row['id'] for row in existing.data}
+    lista_opcoes = [f"{row['id']} - {row['Norma']}" for row in existing.data]
+    lista_ids = {f"{row['id']} - {row['Norma']}": row['id'] for row in existing.data}
 
     # Selectbox COM KEY (evita reset na rerender)
     selected = st.selectbox("Escolha uma mensagem existente:", lista_opcoes, key="select_msg")
@@ -53,7 +53,7 @@ with col1:
     # GUARDA O ID NA SESSION_STATE
     st.session_state["selected_id"] = lista_ids[selected]
 
-    texto2 = st.text_input("Texto 2:")
+    texto2 = st.Norma_input("Texto 2:")
 
     if st.button("Salvar Texto 2"):
         if texto2.strip():
