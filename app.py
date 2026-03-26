@@ -44,15 +44,20 @@ with col1:
     # CARREGAR LISTA DE MENSAGENS PARA O SELECTBOX
     existing = supabase.table("messages").select("id, text").order("created_at", desc=True).execute()
 
-    options = {f"{row['id']} - {row['text']}": row["id"] for row in existing.data}
+    lista_opcoes = [f"{row['id']} - {row['text']}" for row in existing.data]
+    lista_ids = {f"{row['id']} - {row['text']}": row['id'] for row in existing.data}
 
-    selected = st.selectbox("Escolha uma mensagem existente:", list(options.keys()))
+    # Selectbox COM KEY (evita reset na rerender)
+    selected = st.selectbox("Escolha uma mensagem existente:", lista_opcoes, key="select_msg")
+
+    # GUARDA O ID NA SESSION_STATE
+    st.session_state["selected_id"] = lista_ids[selected]
 
     texto2 = st.text_input("Texto 2:")
 
     if st.button("Salvar Texto 2"):
         if texto2.strip():
-            selected_id = options[selected]
+            selected_id = st.session_state["selected_id"]
 
             supabase.table("messages").update({
                 "texto2": texto2
@@ -60,6 +65,7 @@ with col1:
 
             st.success("Texto 2 salvo com sucesso!")
             st.rerun()
+
 
 # =====================================================================
 # COLUNA DIREITA
@@ -78,7 +84,6 @@ with col2:
     if data.data:
         for row in data.data:
 
-            # Converter data ISO -> Brasil
             dt = datetime.fromisoformat(row["created_at"].replace("Z", "+00:00"))
             dt_br = dt.astimezone(br_tz)
             dt_formatado = dt_br.strftime("%d/%m/%Y %H:%M")
@@ -86,7 +91,6 @@ with col2:
             texto1 = row.get("text", "")
             texto2_valor = row.get("texto2", "")
 
-            # Caixa visual estilizada
             st.markdown(
                 f"""
                 <div style="padding:10px; border:1px solid #ddd; border-radius:5px; margin-bottom:10px;">
