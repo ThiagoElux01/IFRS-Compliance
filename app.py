@@ -73,9 +73,25 @@ with col2:
 
     if data.data:
         for row in data.data:
+            # Converter data
             dt = datetime.fromisoformat(row["created_at"].replace("Z", "+00:00"))
             dt_br = dt.astimezone(br_tz)
             dt_formatado = dt_br.strftime("%d/%m/%Y %H:%M")
-            st.markdown(f"**{dt_formatado}** — {row['text']}")
+
+            # Texto principal
+            texto1 = row.get("text", "")
+            texto2 = row.get("texto2", "")
+
+            # Caixa estilizada
+            st.markdown(
+                f"""
+                <div style="padding:10px; border:1px solid #ddd; border-radius:5px; margin-bottom:10px;">
+                    <strong>Data:</strong> {dt_formatado}<br>
+                    <strong>Texto 1:</strong> {texto1}<br>
+                    <strong>Texto 2:</strong> {texto2 if texto2 else "<em>(vazio)</em>"}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
     else:
         st.info("Nenhuma mensagem ainda.")
