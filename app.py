@@ -14,6 +14,9 @@ supabase: Client = create_client(url, key)
 # ---- UI LAYOUT ----
 col1, col2 = st.columns([1, 1])
 
+# =====================================================================
+# COLUNA ESQUERDA
+# =====================================================================
 with col1:
     st.markdown("## IFRS")
     st.write("Insira uma mensagem abaixo:")
@@ -33,6 +36,7 @@ with col1:
             }).execute()
 
             st.success("Mensagem enviada!")
+            st.rerun()
 
     st.markdown("---")
     st.subheader("Adicionar Texto 2")
@@ -49,14 +53,17 @@ with col1:
     if st.button("Salvar Texto 2"):
         if texto2.strip():
             selected_id = options[selected]
-    
+
             supabase.table("messages").update({
                 "texto2": texto2
             }).eq("id", selected_id).execute()
-    
+
             st.success("Texto 2 salvo com sucesso!")
             st.rerun()
 
+# =====================================================================
+# COLUNA DIREITA
+# =====================================================================
 with col2:
     st.markdown("## Últimas mensagens")
 
@@ -70,16 +77,16 @@ with col2:
 
     if data.data:
         for row in data.data:
-            # Converter data
+
+            # Converter data ISO -> Brasil
             dt = datetime.fromisoformat(row["created_at"].replace("Z", "+00:00"))
             dt_br = dt.astimezone(br_tz)
             dt_formatado = dt_br.strftime("%d/%m/%Y %H:%M")
 
-            # Texto principal
             texto1 = row.get("text", "")
             texto2_valor = row.get("texto2", "")
 
-            # Caixa estilizada (HTML CORRETO)
+            # Caixa visual estilizada
             st.markdown(
                 f"""
                 <div style="padding:10px; border:1px solid #ddd; border-radius:5px; margin-bottom:10px;">
