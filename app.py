@@ -33,16 +33,21 @@ with col1:
             st.success("Mensagem enviada!")
 
 with col2:
-    st.markdown("## Últimas mensagens")
-
-    data = supabase.table("messages") \
-        .select("*") \
-        .order("created_at", desc=True) \
-        .limit(20) \
-        .execute()
-
-    if data.data:
-        for row in data.data:
-            st.markdown(f"**{row['created_at']}** — {row['text']}")
-    else:
-        st.info("Nenhuma mensagem ainda.")
+    from datetime import datetime
+    import pytz
+    
+    # timezone Brasil
+    br_tz = pytz.timezone("America/Sao_Paulo")
+    
+    for row in data.data:
+        # Converter string ISO para datetime
+        dt = datetime.fromisoformat(row["created_at"].replace("Z", "+00:00"))
+    
+        # Converter para Brasil
+        dt_br = dt.astimezone(br_tz)
+    
+        # Formatar dd/mm/yyyy HH:MM
+        dt_formatado = dt_br.strftime("%d/%m/%Y %H:%M")
+    
+        # Exibir
+        st.markdown(f"**{dt_formatado}** — {row['text']}")
