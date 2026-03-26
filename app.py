@@ -35,7 +35,11 @@ with col1:
 with col2:
     st.markdown("## Últimas mensagens")
 
-    data = supabase.table("messages").select("*").order("created_at", desc=True).limit(20).execute()
+    data = supabase.table("messages") \
+        .select("*") \
+        .order("created_at", desc=True) \
+        .limit(20) \
+        .execute()
 
     if data.data:
         for row in data.data:
