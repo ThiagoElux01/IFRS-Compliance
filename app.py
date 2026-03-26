@@ -77,15 +77,15 @@ with col2:
 
             # Texto principal
             texto1 = row.get("text", "")
-            texto2 = row.get("texto2", "")
+            texto2_valor = row.get("texto2", "")
 
-            # Caixa estilizada
+            # Caixa estilizada (HTML CORRETO)
             st.markdown(
                 f"""
                 <div style="padding:10px; border:1px solid #ddd; border-radius:5px; margin-bottom:10px;">
                     <strong>Data:</strong> {dt_formatado}<br>
                     <strong>Texto 1:</strong> {texto1}<br>
-                    <strong>Texto 2:</strong> {texto2 if texto2 else "<em>(vazio)</em>"}
+                    <strong>Texto 2:</strong> {texto2_valor if texto2_valor else "<em>(vazio)</em>"}
                 </div>
                 """,
                 unsafe_allow_html=True
