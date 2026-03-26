@@ -33,21 +33,21 @@ with col1:
             st.success("Mensagem enviada!")
 
 with col2:
-    from datetime import datetime
-    import pytz
-    
-    # timezone Brasil
-    br_tz = pytz.timezone("America/Sao_Paulo")
-    
-    for row in data.data:
-        # Converter string ISO para datetime
-        dt = datetime.fromisoformat(row["created_at"].replace("Z", "+00:00"))
-    
-        # Converter para Brasil
-        dt_br = dt.astimezone(br_tz)
-    
-        # Formatar dd/mm/yyyy HH:MM
-        dt_formatado = dt_br.strftime("%d/%m/%Y %H:%M")
-    
-        # Exibir
-        st.markdown(f"**{dt_formatado}** — {row['text']}")
+        from datetime import datetime
+        import pytz
+        
+        # timezone Brasil
+        br_tz = pytz.timezone("America/Sao_Paulo")
+        
+        for row in data.data:
+            # Converter string ISO para datetime
+            dt = datetime.fromisoformat(row["created_at"].replace("Z", "+00:00"))
+        
+            # Converter para Brasil
+            dt_br = dt.astimezone(br_tz)
+        
+            # Formatar dd/mm/yyyy HH:MM
+            dt_formatado = dt_br.strftime("%d/%m/%Y %H:%M")
+        
+            # Exibir
+            st.markdown(f"**{dt_formatado}** — {row['text']}")
