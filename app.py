@@ -1,4 +1,6 @@
 import streamlit as st
+st.write("URL:", st.secrets.get("SUPABASE_URL"))
+st.write("KEY:", st.secrets.get("SUPABASE_KEY"))
 from datetime import datetime
 from supabase import create_client
 import pytz
