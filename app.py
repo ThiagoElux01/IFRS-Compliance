@@ -48,17 +48,14 @@ with col1:
 
     if st.button("Salvar Texto 2"):
         if texto2.strip():
-            brasil_tz = pytz.timezone("America/Sao_Paulo")
-            now = datetime.now(brasil_tz)
-
             selected_id = options[selected]
-
+    
             supabase.table("messages").update({
-                "texto2": texto2,
-                "created_at": now.isoformat()
+                "texto2": texto2
             }).eq("id", selected_id).execute()
-
-            st.success("Texto 2 salvo e data atualizada!")
+    
+            st.success("Texto 2 salvo com sucesso!")
+            st.experimental_rerun()
 
 with col2:
     st.markdown("## Últimas mensagens")
