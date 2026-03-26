@@ -55,7 +55,7 @@ with col1:
             }).eq("id", selected_id).execute()
     
             st.success("Texto 2 salvo com sucesso!")
-            st.experimental_rerun()
+            st.rerun()
 
 with col2:
     st.markdown("## Últimas mensagens")
