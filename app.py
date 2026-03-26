@@ -10,29 +10,63 @@ url = st.secrets["SUPABASE_URL"]
 key = st.secrets["SUPABASE_KEY"]
 supabase: Client = create_client(url, key)
 
-st.title("Tabela IFRS")
+st.title("📘 IFRS - Cadastro de Normas")
 
-# Buscar dados
-data = supabase.table("messages").select("*").order("created_at", desc=True).execute()
+# -----------------------------
+# INSERIR NOVA NORMA
+# -----------------------------
+st.subheader("Adicionar Nova Norma")
 
-# Se houver dados, formata a tabela
+norma = st.text_input("Norma:")
+descricao = st.text_input("Descrição:")
+
+if st.button("Salvar"):
+    if norma.strip() and descricao.strip():
+        brasil_tz = pytz.timezone("America/Sao_Paulo")
+        now = datetime.now(brasil_tz)
+
+        supabase.table("messages").insert({
+            "Norma": norma,
+            "Descrição": descricao,
+            "created_at": now.isoformat()
+        }).execute()
+
+        st.success("Norma cadastrada com sucesso!")
+        st.rerun()
+
+st.markdown("---")
+
+# -----------------------------
+# LISTAR E EXCLUIR
+# -----------------------------
+st.subheader("Normas Registradas")
+
+data = supabase.table("messages") \
+    .select("*") \
+    .order("created_at", desc=True) \
+    .execute()
+
 if data.data:
-    df = []
-    br_tz = pytz.timezone("America/Sao_Paulo")
 
     for row in data.data:
-        # converter data para formato BR
-        dt = datetime.fromisoformat(row["created_at"].replace("Z", "+00:00"))
-        dt_br = dt.astimezone(br_tz).strftime("%d/%m/%Y %H:%M")
+        colA, colB = st.columns([4, 1])
 
-        df.append({
-            "ID": row["id"],
-            "Norma": row.get("Norma", ""),
-            "Descrição": row.get("Descrição", row.get("texto2", "")),  # usa Descrição se existir
-            "Data Registro": dt_br
-        })
+        with colA:
+            st.markdown(
+                f"""
+                <div style="padding:10px; border:1px solid #ccc; border-radius:6px; margin-bottom:10px;">
+                    <strong>ID:</strong> {row['id']}<br>
+                    <strong>Norma:</strong> {row['Norma']}<br>
+                    <strong>Descrição:</strong> {row['Descrição']}<br>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-    st.table(df)
+        with colB:
+            if st.button("🗑️ Excluir", key=f"del_{row['id']}"):
+                supabase.table("messages").delete().eq("id", row["id"]).execute()
+                st.rerun()
 
 else:
-    st.info("Nenhum registro encontrado.")
+    st.info("Nenhuma norma cadastrada ainda.")
