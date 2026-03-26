@@ -18,8 +18,10 @@ with col1:
     st.markdown("## IFRS")
     st.write("Insira uma mensagem abaixo:")
 
+    # CAMPO TEXTO 1
     msg = st.text_input("Mensagem:")
 
+    # BOTÃO PARA INSERIR TEXTO 1
     if st.button("Enviar"):
         if msg.strip():
             brasil_tz = pytz.timezone("America/Sao_Paulo")
@@ -31,6 +33,32 @@ with col1:
             }).execute()
 
             st.success("Mensagem enviada!")
+
+    st.markdown("---")
+    st.subheader("Adicionar Texto 2")
+
+    # CARREGAR LISTA DE MENSAGENS PARA O SELECTBOX
+    existing = supabase.table("messages").select("id, text").order("created_at", desc=True).execute()
+
+    options = {f"{row['id']} - {row['text']}": row["id"] for row in existing.data}
+
+    selected = st.selectbox("Escolha uma mensagem existente:", list(options.keys()))
+
+    texto2 = st.text_input("Texto 2:")
+
+    if st.button("Salvar Texto 2"):
+        if texto2.strip():
+            brasil_tz = pytz.timezone("America/Sao_Paulo")
+            now = datetime.now(brasil_tz)
+
+            selected_id = options[selected]
+
+            supabase.table("messages").update({
+                "texto2": texto2,
+                "created_at": now.isoformat()
+            }).eq("id", selected_id).execute()
+
+            st.success("Texto 2 salvo e data atualizada!")
 
 with col2:
     st.markdown("## Últimas mensagens")
